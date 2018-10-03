@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: symfony-demo
+spec:
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: symfony-demo
+    spec:
+      initContainers:
+        - name: symfony-demo-init
+          image: bashofmann/symfony-demo-nginx:1.0.0
+          volumeMounts:
+            - mountPath: /volume
+              name: symfony-demo-code
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - "cp -r /var/www/html /volume/html"
+      containers:
+      - name: fpm
+        image: php:7.2-fpm
+        volumeMounts:
+          - mountPath: /var/www
+            name: symfony-demo-code
+        command:
+          - /bin/sh
+          - -c
+        args:
+          - "chown -R www-data:www-data /var/www/html/var && php-fpm"
+      - name: nginx
+        image: nginx:latest
+        volumeMounts:
+          - mountPath: /etc/nginx/conf.d
+            name: symfony-demo-nginx-config
+          - mountPath: /var/www
+            name: symfony-demo-code
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          timeoutSeconds: 1
+      volumes:
+        - name: symfony-demo-code
+          emptyDir: {}
+        - name: symfony-demo-nginx-config
+          configMap:
+            name: symfony-demo-nginx-config
+      imagePullSecrets:
+      - name: regcred
