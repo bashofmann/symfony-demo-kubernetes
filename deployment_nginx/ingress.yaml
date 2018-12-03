@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 metadata:
   name: symfony-demo
   annotations:
-    certmanager.k8s.io/cluster-issuer:  letsencrypt-prod
+    certmanager.k8s.io/cluster-issuer:  letsncrypt-prod
 spec:
   tls:
   - hosts:

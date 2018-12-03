@@ -1,9 +1,12 @@
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: symfony-demo
 spec:
   revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: symfony-demo
   template:
     metadata:
        labels:
@@ -11,7 +14,7 @@ spec:
     spec:
       containers:
         - name: symfony-demo
-          image: bashofmann/symfony-demo:1.1.1
+          image: bashofmann/symfony-demo:2.0.6
           livenessProbe:
             httpGet:
               path: /
