@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: symfony-demo
-          image: bashofmann/symfony-demo:2.0.6
+          image: bashofmann/symfony-demo:3.0.0
           livenessProbe:
             httpGet:
               path: /
@@ -51,10 +51,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - symfony-demo.bastian.plgrnd.be
+    - symfony-demo-dev.k8s.bastianhofmann.de
     secretName: symfony-demo-secret
   rules:
-  - host: symfony-demo.bastian.plgrnd.be
+  - host: symfony-demo-dev.k8s.bastianhofmann.de
     http:
       paths:
       - path: /
